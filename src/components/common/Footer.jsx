@@ -1,92 +1,105 @@
 import React from "react";
+import Logo from "../../assets/images/logo.svg";
+import {
+  FaInstagram,
+  FaFacebook,
+  FaTwitter,
+  FaGithub,
+  FaDribbble,
+} from "react-icons/fa";
+
+const socialLinks = [
+  {
+    href: "https://instagram.com/",
+    label: "Instagram",
+    icon: (
+      <FaInstagram className="w-7 h-7 text-blue-900 hover:text-yellow-400 transition-colors" />
+    ),
+  },
+  {
+    href: "https://facebook.com/",
+    label: "Facebook",
+    icon: (
+      <FaFacebook className="w-7 h-7 text-blue-900 hover:text-yellow-400 transition-colors" />
+    ),
+  },
+  {
+    href: "https://twitter.com/",
+    label: "Twitter",
+    icon: (
+      <FaTwitter className="w-7 h-7 text-blue-900 hover:text-yellow-400 transition-colors" />
+    ),
+  },
+  {
+    href: "https://github.com/",
+    label: "GitHub",
+    icon: (
+      <FaGithub className="w-7 h-7 text-blue-900 hover:text-yellow-400 transition-colors" />
+    ),
+  },
+  {
+    href: "https://dribbble.com/",
+    label: "Dribbble",
+    icon: (
+      <FaDribbble className="w-7 h-7 text-blue-900 hover:text-yellow-400 transition-colors" />
+    ),
+  },
+];
+
+const navLinks = [
+  { label: "Home", href: "#" },
+  { label: "Products", href: "#" },
+  { label: "About Us", href: "#" },
+  { label: "Login", href: "#" },
+];
 
 const Footer = () => {
   return (
-    <footer className="bg-blue-900 text-white py-12">
-      <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <h3 className="font-black text-xl mb-4 text-yellow-300">SHOP</h3>
-            <ul className="space-y-2 text-gray-300">
-              <li>
-                <a href="#" className="hover:text-white">
-                  All Products
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
-                  Variety Packs
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
-                  Merch
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="font-black text-xl mb-4 text-yellow-300">ABOUT</h3>
-            <ul className="space-y-2 text-gray-300">
-              <li>
-                <a href="#" className="hover:text-white">
-                  Our Story
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
-                  Find Us
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
-                  Contact
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="font-black text-xl mb-4 text-yellow-300">SOCIAL</h3>
-            <ul className="space-y-2 text-gray-300">
-              <li>
-                <a href="#" className="hover:text-white">
-                  Instagram
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
-                  TikTok
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
-                  Facebook
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="font-black text-xl mb-4 text-yellow-300">
-              NEWSLETTER
-            </h3>
-            <p className="mb-4 text-gray-300">
-              Join our list for exclusive offers and updates.
-            </p>
-            <form className="flex">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="w-full bg-blue-800 text-white px-4 py-2 rounded-l-md focus:outline-none placeholder-gray-400 border border-blue-700"
-              />
-              <button className="bg-yellow-400 text-blue-900 font-bold py-2 px-4 rounded-r-md hover:bg-white transition">
-                GO
-              </button>
-            </form>
-          </div>
-        </div>
-        <div className="mt-12 pt-8 border-t border-blue-800 text-center text-sm text-gray-400">
-          <p>&copy; 2025 Spritz Society Creative. All Rights Reserved.</p>
-        </div>
+    <footer className="w-full flex flex-col items-center justify-center py-10 px-2 bg-white">
+      {/* Social Icons */}
+      <div className="flex flex-wrap justify-center items-center space-x-6 mb-8">
+        {socialLinks.map((item) => (
+          <a
+            key={item.label}
+            href={item.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={item.label}
+            className="hover:scale-110 transition-transform mb-3 sm:mb-0"
+          >
+            {item.icon}
+          </a>
+        ))}
+      </div>
+      {/* Main Footer Box */}
+      <div className="w-full max-w-2xl rounded-2xl border-4 border-blue-900 px-4 sm:px-8 py-6 flex flex-col items-center mb-8 bg-white">
+        <nav className="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-4 sm:gap-8 mb-2 w-full">
+          {navLinks.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className="font-bold text-blue-900 hover:text-yellow-400 transition-colors text-base sm:text-lg text-center"
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+      </div>
+      {/* Description and External Link */}
+      <div className="text-center text-gray-500 text-xs sm:text-sm max-w-xs sm:max-w-xl mb-2 px-2">
+        Award-winning sparkling cocktails made with real ingredients. No secret
+        stuff, just real, simple, and delicious spritz.
+      </div>
+      <a
+        href="https://spritzsociety.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-pink-600 underline hover:text-pink-800 text-xs sm:text-sm mb-2"
+      >
+        Visit Spritz Society
+      </a>
+      <div className="text-center text-gray-400 text-xs mt-2">
+        &copy; 2025 Spritz Society. All Rights Reserved.
       </div>
     </footer>
   );

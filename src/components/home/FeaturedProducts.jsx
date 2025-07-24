@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import gsap from "gsap";
 import { fetchProducts } from "../../data/productData";
 import "../../styles/products-grid.css";
 
@@ -19,6 +20,7 @@ const FeaturedProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const cardsRef = useRef([]);
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -28,6 +30,16 @@ const FeaturedProducts = () => {
     };
     loadProducts();
   }, []);
+
+  useEffect(() => {
+    if (!loading && cardsRef.current.length) {
+      gsap.fromTo(
+        cardsRef.current,
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.7, ease: "power2.out", stagger: 0.12 }
+      );
+    }
+  }, [loading]);
 
   if (loading) {
     return (
@@ -48,12 +60,13 @@ const FeaturedProducts = () => {
           yours?
         </p>
         <div className="product-grid">
-          {products.slice(0, 4).map((product) => {
+          {products.slice(0, 4).map((product, i) => {
             const bg = productBgMap[product.id] || "#fde047";
             return (
               <div
                 className="product-card"
                 key={product.id}
+                ref={(el) => (cardsRef.current[i] = el)}
                 style={{
                   "--product-bg": bg,
                 }}

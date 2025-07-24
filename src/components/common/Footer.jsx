@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import Logo from "../../assets/images/logo.svg";
 import {
   FaInstagram,
@@ -47,10 +48,10 @@ const socialLinks = [
 ];
 
 const navLinks = [
-  { label: "Home", href: "#" },
-  { label: "Products", href: "#" },
-  { label: "About Us", href: "#" },
-  { label: "Login", href: "#" },
+  { label: "Home", to: "/" },
+  { label: "Products", to: "/products" },
+  { label: "About Us", to: "/about" },
+  { label: "Login", to: "/login" },
 ];
 
 const Footer = () => {
@@ -75,13 +76,17 @@ const Footer = () => {
       <div className="w-full max-w-2xl rounded-2xl border-4 border-blue-900 px-2 sm:px-4 md:px-8 py-4 sm:py-6 flex flex-col items-center mb-6 sm:mb-8 bg-white">
         <nav className="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-2 sm:gap-4 md:gap-8 mb-2 w-full">
           {navLinks.map((link) => (
-            <a
+            <NavLink
               key={link.label}
-              href={link.href}
-              className="font-bold text-blue-900 hover:text-yellow-400 transition-colors text-sm sm:text-base md:text-lg text-center"
+              to={link.to}
+              className={({ isActive }) =>
+                `font-bold text-blue-900 hover:text-yellow-400 transition-colors text-sm sm:text-base md:text-lg text-center px-2 py-1 rounded-md` +
+                (isActive ? " bg-yellow-100" : "")
+              }
+              end={link.to === "/"}
             >
               {link.label}
-            </a>
+            </NavLink>
           ))}
         </nav>
       </div>

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import gsap from "gsap";
-import litPic from "../../assets/images/LIT_pic.webp";
+// import litPic from "../../assets/images/LIT_pic.webp";
 
 const Hero = () => {
   const headlineRef = useRef([]);
@@ -28,15 +28,16 @@ const Hero = () => {
   }, []);
 
   return (
-    <div className="min-h-[60vh] md:min-h-screen bg-blue-800 text-white relative overflow-hidden flex flex-col justify-center items-center py-12 md:py-0">
-      <img
-        src={litPic}
-        alt="Hero Background"
+    <div className="min-h-[60vh] md:min-h-screen text-white relative overflow-hidden flex flex-col justify-center items-center py-12 md:py-0">
+      {/* Background Video */}
+      <video
         className="absolute z-0 w-full h-full object-cover object-center"
-        style={{
-          top: 0,
-          left: 0,
-        }}
+        style={{ top: 0, left: 0 }}
+        src="/assets/Provided.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
       />
       <div className="absolute inset-0 bg-black opacity-50 z-10"></div>
       <div className="relative z-20 w-full max-w-xl mx-auto text-center px-4 flex flex-col items-center justify-center">

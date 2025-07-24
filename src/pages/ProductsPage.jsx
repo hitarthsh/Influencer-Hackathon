@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import gsap from "gsap";
 import { fetchProducts } from "../data/productData";
 import "../styles/products-grid.css";
 
@@ -20,6 +21,7 @@ const ProductsPage = ({ setNotFoundIfOffline }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const cardsRef = useRef([]);
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -36,6 +38,16 @@ const ProductsPage = ({ setNotFoundIfOffline }) => {
     window.addEventListener("offline", setNotFoundIfOffline);
     return () => window.removeEventListener("offline", setNotFoundIfOffline);
   }, []);
+
+  useEffect(() => {
+    if (!loading && cardsRef.current.length) {
+      gsap.fromTo(
+        cardsRef.current,
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.7, ease: "power2.out", stagger: 0.12 }
+      );
+    }
+  }, [loading]);
 
   return (
     <section className="product-grid-section min-h-screen pt-16">
@@ -62,6 +74,7 @@ const ProductsPage = ({ setNotFoundIfOffline }) => {
                 <div
                   className="product-card"
                   key={product.id}
+                  ref={(el) => (cardsRef.current[i] = el)}
                   style={{
                     "--product-bg": bg,
                   }}

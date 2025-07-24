@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import gsap from "gsap";
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/common/Footer";
 import HomePage from "./pages/HomePage";
@@ -7,10 +9,18 @@ import ProductDetailPage from "./pages/ProductDetailPage";
 import AboutPage from "./pages/AboutPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 export default function App() {
-  const [page, setPage] = useState("home");
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const mainRef = useRef(null);
+
+  // Helper: set notfound if offline
+  const setNotFoundIfOffline = () => {
+    if (!navigator.onLine) navigate("/notfound");
+  };
 
   useEffect(() => {
     const style = document.createElement("style");
@@ -29,40 +39,49 @@ export default function App() {
     };
   }, []);
 
-  const renderPage = () => {
-    if (page.startsWith("product/")) {
-      const productId = page.split("/")[1];
-      return <ProductDetailPage setPage={setPage} productId={productId} />;
+  // GSAP page transition animation
+  useEffect(() => {
+    if (mainRef.current) {
+      gsap.fromTo(
+        mainRef.current,
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }
+      );
     }
-    switch (page) {
-      case "home":
-        return <HomePage setPage={setPage} />;
-      case "products":
-        return <ProductsPage setPage={setPage} />;
-      case "about":
-        return <AboutPage />;
-      case "login":
-        return <LoginPage setPage={setPage} />;
-      case "signup":
-        return <SignUpPage setPage={setPage} />;
-      default:
-        return <HomePage setPage={setPage} />;
-    }
-  };
+  }, [location]);
 
   return (
     <div className="bg-white" style={{ fontFamily: "'Inter', sans-serif" }}>
-      <Navbar
-        isMenuOpen={isMenuOpen}
-        setIsMenuOpen={setIsMenuOpen}
-        setPage={setPage}
-      />
+      <Navbar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
       <main
+        ref={mainRef}
         className={`transition-all duration-400 ${
           isMenuOpen ? "pl-28 md:pl-32" : "pl-16"
         }`}
       >
-        {renderPage()}
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/products"
+            element={
+              <ProductsPage setNotFoundIfOffline={setNotFoundIfOffline} />
+            }
+          />
+          <Route
+            path="/product/:productId"
+            element={
+              <ProductDetailPage setNotFoundIfOffline={setNotFoundIfOffline} />
+            }
+          />
+          <Route
+            path="/about"
+            element={<AboutPage setNotFoundIfOffline={setNotFoundIfOffline} />}
+          />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/notfound" element={<NotFoundPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
       </main>
       <div
         className={`transition-all duration-400 ${

@@ -1,61 +1,102 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { fetchProducts } from "../data/productData";
+import "../styles/products-grid.css";
 
-const ProductsPage = ({ setPage }) => {
+// Map product id to a unique main color for the hover effect
+const productBgMap = {
+  peach: "#fde047", // yellow
+  "peach-pour": "#fbbf24", // amber
+  pickle: "#4ade80", // green
+  "pickle-pour": "#22d3ee", // cyan
+  "lemon-iced-tea": "#facc15", // lemon
+  "pink-lemonade": "#f472b6", // pink
+  "lit-special": "#2563eb", // blue
+  "pl-classic": "#f97316", // orange
+  "mobile-updated": "#a3e635", // lime
+};
+
+const ProductsPage = ({ setNotFoundIfOffline }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadProducts = async () => {
-      const data = await fetchProducts();
-      setProducts(data);
-      setLoading(false);
+      try {
+        if (setNotFoundIfOffline) setNotFoundIfOffline();
+        const data = await fetchProducts();
+        setProducts(data);
+        setLoading(false);
+      } catch (err) {
+        if (setNotFoundIfOffline) setNotFoundIfOffline();
+      }
     };
     loadProducts();
+    window.addEventListener("offline", setNotFoundIfOffline);
+    return () => window.removeEventListener("offline", setNotFoundIfOffline);
   }, []);
 
   return (
-    <div className="bg-blue-50 min-h-screen pt-16">
-      <div className="container mx-auto px-6 py-12">
-        <h1 className="text-5xl font-black text-center mb-12 text-blue-900">
-          ALL FLAVORS
-        </h1>
+    <section className="product-grid-section min-h-screen pt-16">
+      <div className="container">
+        <div className="title-section">
+          <h2 className="section-title font-nunito text-blue-900">
+            Latest Drop
+          </h2>
+        </div>
+        <div className="subtitle-section">
+          <p className="section-subtitle text-blue-900/80 font-nunito">
+            Grab our freshest flavors before they sell out!
+          </p>
+        </div>
         {loading ? (
-          <div className="text-center text-2xl font-bold text-blue-900">
+          <div className="text-center text-2xl font-bold text-blue-900 mt-12">
             Loading...
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {products.map((product) => (
-              <div
-                key={product.id}
-                className="bg-white rounded-lg text-center transition-all duration-300 hover:transform hover:-translate-y-2 hover:shadow-2xl border-2 border-transparent hover:border-blue-400 cursor-pointer group"
-                onClick={() => setPage(`product/${product.id}`)}
-              >
-                <div className="overflow-hidden rounded-t-lg">
-                  <img
-                    src={product.image}
-                    alt={`${product.name} Spritz`}
-                    className="mx-auto h-96 object-contain p-4 transition-transform duration-500 group-hover:scale-110"
-                  />
+          <div className="product-grid">
+            {products.map((product, i) => {
+              const bg = productBgMap[product.id] || "#fde047";
+              return (
+                <div
+                  className="product-card"
+                  key={product.id}
+                  style={{
+                    "--product-bg": bg,
+                  }}
+                >
+                  <div className="product-details">
+                    <span className="product-price">{product.price}</span>
+                    <span className="product-rating">
+                      ⭐ {Math.floor(Math.random() * 100) + 20}
+                    </span>
+                  </div>
+                  <div className="product-image-wrapper">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="product-image"
+                    />
+                  </div>
+                  <div className="title-wrapper">
+                    <h3 className="product-title">{product.name}</h3>
+                  </div>
+                  <div className="product-button-wrapper">
+                    <button
+                      className="product-btn"
+                      onClick={() => navigate(`/product/${product.id}`)}
+                    >
+                      View Flavor
+                    </button>
+                  </div>
                 </div>
-                <div className="p-6">
-                  <h3 className="text-2xl font-bold mb-2 text-blue-900">
-                    {product.name}
-                  </h3>
-                  <p className="text-gray-600 mb-4 h-20">
-                    {product.description}
-                  </p>
-                  <span className="bg-yellow-400 text-blue-900 font-bold py-2 px-8 rounded-md transition-all duration-300">
-                    VIEW FLAVOR
-                  </span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 };
 

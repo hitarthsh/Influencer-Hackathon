@@ -55,9 +55,9 @@ const navLinks = [
 
 const Footer = () => {
   return (
-    <footer className="w-full flex flex-col items-center justify-center py-10 px-2 bg-white">
+    <footer className="w-full flex flex-col items-center justify-center py-8 sm:py-10 px-2 bg-white">
       {/* Social Icons */}
-      <div className="flex flex-wrap justify-center items-center space-x-6 mb-8">
+      <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 mb-6 sm:mb-8 w-full">
         {socialLinks.map((item) => (
           <a
             key={item.label}
@@ -65,20 +65,20 @@ const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={item.label}
-            className="hover:scale-110 transition-transform mb-3 sm:mb-0"
+            className="hover:scale-110 transition-transform mb-2 sm:mb-0"
           >
             {item.icon}
           </a>
         ))}
       </div>
       {/* Main Footer Box */}
-      <div className="w-full max-w-2xl rounded-2xl border-4 border-blue-900 px-4 sm:px-8 py-6 flex flex-col items-center mb-8 bg-white">
-        <nav className="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-4 sm:gap-8 mb-2 w-full">
+      <div className="w-full max-w-2xl rounded-2xl border-4 border-blue-900 px-2 sm:px-4 md:px-8 py-4 sm:py-6 flex flex-col items-center mb-6 sm:mb-8 bg-white">
+        <nav className="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-2 sm:gap-4 md:gap-8 mb-2 w-full">
           {navLinks.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              className="font-bold text-blue-900 hover:text-yellow-400 transition-colors text-base sm:text-lg text-center"
+              className="font-bold text-blue-900 hover:text-yellow-400 transition-colors text-sm sm:text-base md:text-lg text-center"
             >
               {link.label}
             </a>
@@ -86,7 +86,7 @@ const Footer = () => {
         </nav>
       </div>
       {/* Description and External Link */}
-      <div className="text-center text-gray-500 text-xs sm:text-sm max-w-xs sm:max-w-xl mb-2 px-2">
+      <div className="text-center text-gray-500 text-xs sm:text-sm max-w-[90vw] sm:max-w-xs md:max-w-xl mb-2 px-2">
         Award-winning sparkling cocktails made with real ingredients. No secret
         stuff, just real, simple, and delicious spritz.
       </div>

@@ -1,12 +1,15 @@
 import React, { useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
-const Navbar = ({ isMenuOpen, setIsMenuOpen, setPage }) => {
+const Navbar = ({ isMenuOpen, setIsMenuOpen }) => {
+  const navigate = useNavigate();
   const toggleMenu = () => {
     setIsMenuOpen((open) => !open);
   };
 
-  const handleNavClick = (page) => {
-    setPage(page);
+  // Close menu on navigation
+  const handleNav = (to) => {
+    navigate(to);
     setIsMenuOpen(false);
   };
 
@@ -26,12 +29,12 @@ const Navbar = ({ isMenuOpen, setIsMenuOpen, setPage }) => {
       {/* Fixed Left Menu */}
       <div
         className={`fixed top-0 left-0 h-screen ${
-          isMenuOpen ? "w-28 md:w-32" : "w-16"
-        } bg-blue-700/90 border-r border-blue-500/50 z-40 flex flex-col justify-between items-center py-8 transition-all duration-400 backdrop-blur-sm`}
+          isMenuOpen ? "w-12 sm:w-16 md:w-15" : "w-12 sm:w-16"
+        } bg-blue-700/90 border-r border-blue-500/50 z-40 flex flex-col justify-between items-center py-4 transition-all duration-400 backdrop-blur-sm`}
       >
         <div className="w-full flex justify-center">
           <button
-            className={`relative w-12 h-10 flex flex-col justify-center items-center z-30 group`}
+            className={`relative w-10 sm:w-12 h-10 flex flex-col justify-center items-center z-30 group`}
             aria-label="Open Menu"
             onClick={toggleMenu}
           >
@@ -43,6 +46,7 @@ const Navbar = ({ isMenuOpen, setIsMenuOpen, setPage }) => {
             <span
               className={`absolute left-2 w-8 h-0.5 bg-yellow-300 transition-all duration-400 ${
                 isMenuOpen ? "opacity-0 -translate-x-5" : ""
+              }
               }`}
             ></span>
             <span
@@ -52,22 +56,6 @@ const Navbar = ({ isMenuOpen, setIsMenuOpen, setPage }) => {
             ></span>
           </button>
         </div>
-        <div
-          className={`flex-1 flex justify-center items-center text-center px-4 -rotate-90 transition-opacity duration-300 overflow-hidden ${
-            isMenuOpen ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <h2 className="font-serif text-base md:text-lg tracking-widest uppercase whitespace-nowrap text-yellow-300">
-            Spritz Society
-          </h2>
-        </div>
-        <div
-          className={`font-serif text-xs text-center tracking-wide font-medium uppercase text-white mb-2 transition-opacity duration-300 ${
-            isMenuOpen ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <p className="-rotate-90 text-2xl">2025</p>
-        </div>
       </div>
 
       {/* Fullscreen Overlay Menu */}
@@ -76,22 +64,26 @@ const Navbar = ({ isMenuOpen, setIsMenuOpen, setPage }) => {
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <nav className="w-full h-full flex flex-col justify-center items-start pl-24 md:pl-48 pr-8 relative z-10 transition-all duration-400">
+        <nav className="w-full h-full flex flex-col justify-center items-start pl-16 sm:pl-24 md:pl-48 pr-4 sm:pr-8 relative z-10 transition-all duration-400">
           <ul className="list-none w-full">
             {[
-              { page: "home", label: "HOME" },
-              { page: "products", label: "PRODUCTS" },
-              { page: "about", label: "ABOUT US" },
-              { page: "login", label: "LOGIN" },
+              { to: "/", label: "HOME" },
+              { to: "/products", label: "PRODUCTS" },
+              { to: "/about", label: "ABOUT US" },
+              { to: "/login", label: "LOGIN" },
             ].map((item) => (
-              <li className="py-4" key={item.page}>
-                <a
-                  href="#"
-                  onClick={() => handleNavClick(item.page)}
-                  className="block text-yellow-300 text-5xl md:text-7xl font-extrabold uppercase font-serif tracking-tight relative after:content-[''] after:absolute after:left-0 after:top-1/2 after:h-1 after:w-0 after:bg-yellow-300 after:transition-all after:duration-300 after:-translate-y-1/2 hover:after:w-full"
+              <li className="py-4" key={item.to}>
+                <NavLink
+                  to={item.to}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `block text-yellow-300 text-xl sm:text-2xl md:text-7xl font-extrabold uppercase font-serif tracking-tight relative after:content-[''] after:absolute after:left-0 after:top-1/2 after:h-1 after:w-0 after:bg-yellow-300 after:transition-all after:duration-300 after:-translate-y-1/2 hover:after:w-full` +
+                    (isActive ? " text-white drop-shadow-lg" : "")
+                  }
+                  end={item.to === "/"}
                 >
                   {item.label}
-                </a>
+                </NavLink>
               </li>
             ))}
           </ul>

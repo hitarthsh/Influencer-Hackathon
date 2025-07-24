@@ -1,7 +1,24 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: "Inter", sans-serif;
+.font-nunito {
+  font-family: "Nunito", sans-serif;
+}
+
+@layer utilities {
+  .animate-fade-in-down {
+    animation: fade-in-down 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes fade-in-down {
+    0% {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(20px);
+    }
+  }
 }

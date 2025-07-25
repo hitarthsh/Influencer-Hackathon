@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useLayoutEffect } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import gsap from "gsap";
 import Navbar from "./components/layout/Navbar";
@@ -10,12 +10,14 @@ import AboutPage from "./pages/AboutPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import SplashCursor from "./components/SplashCursor";
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const mainRef = useRef(null);
+  const smootherRef = useRef(null);
 
   // Helper: set notfound if offline
   const setNotFoundIfOffline = () => {
@@ -50,45 +52,84 @@ export default function App() {
     }
   }, [location]);
 
+  // GSAP ScrollSmoother for smooth scrolling
+  useLayoutEffect(() => {
+    let smoother;
+    // Dynamically import ScrollSmoother for compatibility
+    import("gsap/ScrollSmoother")
+      .then((module) => {
+        gsap.registerPlugin(module.default);
+        smoother = module.default.create({
+          wrapper: "#smooth-wrapper",
+          content: "#smooth-content",
+          smooth: 1.2,
+          effects: true,
+        });
+        smootherRef.current = smoother;
+      })
+      .catch(() => {});
+    return () => {
+      if (smootherRef.current) {
+        smootherRef.current.kill();
+        smootherRef.current = null;
+      }
+    };
+  }, []);
+
   return (
-    <div className="bg-white" style={{ fontFamily: "'Inter', sans-serif" }}>
-      <Navbar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
-      <main
-        ref={mainRef}
-        className={`transition-all duration-400 ${
-          isMenuOpen ? "pl-28 md:pl-32" : "pl-16"
-        }`}
-      >
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route
-            path="/products"
-            element={
-              <ProductsPage setNotFoundIfOffline={setNotFoundIfOffline} />
-            }
-          />
-          <Route
-            path="/product/:productId"
-            element={
-              <ProductDetailPage setNotFoundIfOffline={setNotFoundIfOffline} />
-            }
-          />
-          <Route
-            path="/about"
-            element={<AboutPage setNotFoundIfOffline={setNotFoundIfOffline} />}
-          />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/notfound" element={<NotFoundPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </main>
-      <div
-        className={`transition-all duration-400 ${
-          isMenuOpen ? "pl-28 md:pl-32" : "pl-16"
-        }`}
-      >
-        <Footer />
+    <div
+      id="smooth-wrapper"
+      className="bg-white min-h-screen overflow-x-hidden"
+      style={{
+        fontFamily: "'Inter', sans-serif",
+        background: "linear-gradient(135deg, #fff 60%, #f0f4ff 100%)",
+      }}
+    >
+      <div id="smooth-content">
+        <SplashCursor />
+        <Navbar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+        <main
+          ref={mainRef}
+          className={`transition-all duration-400 ml-12 sm:ml-16 ${
+            isMenuOpen ? "md:ml-32" : ""
+          } min-h-screen`}
+        >
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/products"
+              element={
+                <ProductsPage setNotFoundIfOffline={setNotFoundIfOffline} />
+              }
+            />
+            <Route
+              path="/product/:productId"
+              element={
+                <ProductDetailPage
+                  setNotFoundIfOffline={setNotFoundIfOffline}
+                  isMenuOpen={isMenuOpen}
+                />
+              }
+            />
+            <Route
+              path="/about"
+              element={
+                <AboutPage setNotFoundIfOffline={setNotFoundIfOffline} />
+              }
+            />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/notfound" element={<NotFoundPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </main>
+        <div
+          className={`transition-all duration-400 ml-12 sm:ml-16 ${
+            isMenuOpen ? "md:ml-32" : ""
+          }`}
+        >
+          <Footer />
+        </div>
       </div>
     </div>
   );

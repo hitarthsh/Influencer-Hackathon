@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import gsap from "gsap";
+import providedVideo from "../../assets/Provided.mp4";
 // import litPic from "../../assets/images/LIT_pic.webp";
 
 const Hero = () => {
@@ -33,11 +34,10 @@ const Hero = () => {
       <video
         className="absolute z-0 w-full h-full object-cover object-center"
         style={{ top: 0, left: 0 }}
-        src="/assets/Provided.mp4"
+        src={providedVideo}
         autoPlay
         muted
         loop
-        playsInline
       />
       <div className="absolute inset-0 bg-black opacity-50 z-10"></div>
       <div className="relative z-20 w-full max-w-xl mx-auto text-center px-4 flex flex-col items-center justify-center">
